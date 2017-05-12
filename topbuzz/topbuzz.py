@@ -97,6 +97,6 @@ if __name__ == '__main__':
     data = download_video_analysis(email, password)
     with open(output, 'w+') as f:
         for d in data:
-            d.update({"date": datetime.today().strftime('%Y-%m-%d')})
+            d.update({"date": datetime.today().strftime('%Y-%m-%d %H:%M:%S')})
             f.write(json.dumps(d))
             f.write("\n")
