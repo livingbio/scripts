@@ -11,6 +11,7 @@ import time
 import requests
 import logging
 import sys
+import os
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -94,6 +95,11 @@ if __name__ == '__main__':
     import json
 
     _, email, password, output = sys.argv
+
+    base_path = os.path.dirname(output)
+    if not os.path.exists(base_path):
+        os.makedirs(base_path)
+
     data = download_video_analysis(email, password)
     with open(output, 'w+') as f:
         for d in data:
