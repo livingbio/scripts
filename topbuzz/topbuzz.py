@@ -48,7 +48,7 @@ def make_login_session(email, password):
         driver.execute_script("document.querySelector('input.password').value='{}'".format(password))
 
         logger.info('submit')
-        driver.find_element_by_css_selector('.btn-bg-primary').click()
+        driver.find_element_by_css_selector('.tb-btn-primary').click()
         
         WebDriverWait(driver, 10).until(
             lambda x:x.current_url == 'https://topbuzz.com/'
