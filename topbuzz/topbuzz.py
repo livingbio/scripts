@@ -51,7 +51,7 @@ def make_login_session(email, password):
         driver.find_element_by_css_selector('.tb-btn-primary').click()
         
         WebDriverWait(driver, 10).until(
-            lambda x:x.current_url == 'https://topbuzz.com/'
+                lambda x:not x.find_elements_by_css_selector(".signin-show")
         )
 
         cookies = dict([(c['name'], c['value']) for c in driver.get_cookies()])
@@ -61,7 +61,7 @@ def make_login_session(email, password):
         return session
     except Exception as e:
         logger.error(e)
-        return False
+        raise e
     finally:
         driver.close()
 
