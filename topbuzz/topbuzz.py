@@ -26,7 +26,7 @@ logger.addHandler(ch)
 
 def make_login_session(email, password):
     logger.info('loging start')
-    driver = Chrome("/etc/chromedriver")
+    driver = Chrome()
     try:
         driver.get('https://topbuzz.com/privacy')
         login_btn = driver.find_element_by_css_selector('.right-menu .btn-inline')
