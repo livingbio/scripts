@@ -26,7 +26,7 @@ logger.addHandler(ch)
 
 def make_login_session(email, password):
     logger.info('loging start')
-    driver = Chrome()
+    driver = Chrome("/etc/chromedriver")
     try:
         driver.get('https://topbuzz.com/privacy')
         login_btn = driver.find_element_by_css_selector('.right-menu .btn-inline')
@@ -55,20 +55,18 @@ def make_login_session(email, password):
         )
 
         cookies = dict([(c['name'], c['value']) for c in driver.get_cookies()])
-        session = requests.Session()
-        session.get("https://topbuzz.com/privacy", cookies=cookies)
-        
-        return session
+        return cookies
     except Exception as e:
         logger.error(e)
         raise e
     finally:
         driver.close()
+        pass
 
 
 
 def download_video_analysis(email, password):
-    session = make_login_session(email, password)
+    cookies = make_login_session(email, password)
     page_size = 50
     page = 0
     offset = 0
@@ -76,11 +74,16 @@ def download_video_analysis(email, password):
 
     while True:
         url = analysis_url.format(page, page_size, offset)
-        data = session.get(url).json()
+        data = requests.get(url, cookies=cookies).json()
         page += 1
         offset = page * page_size
+        
+        try:
+            data = data['data']['stats_data']
+        except Exception as e:
+            print data
+            raise e
 
-        data = data['data']['stats_data']
         if not data:
             return
         for d in data:
