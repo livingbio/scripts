@@ -145,6 +145,7 @@ def get_game_tracking_log(id):
                 pass
         if d['s'] == u"下":
             section = second_half
+            d['t'] = d['t'] or "0"
             time = int(d['t'].replace("'", "")) * 60
         elif d['s'] == u"完赛":
             time = None
