@@ -148,7 +148,8 @@ def get_article(url):
         article_html = unicode(soup.select('.blkContainerSblk')[0])
         article_html = re.sub("\n+", "\n", article_html)
     else:
-        raise Exception('article parse error on {}'.format(url))
+        article_html = ""
+        print 'article parse error {}'.format(url)
     
     return article_html
 
