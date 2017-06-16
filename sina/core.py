@@ -29,9 +29,61 @@ league_years = [
     "2013",
     "2014",
     "2015",
-    "2016"
+    "2016",
+    "2017"
 ]
 
+
+league_infos = [
+  {
+    "sl_league_type": "213",
+    "name": "英超",
+    "cur_rnd": "30",
+    "current_league": "2016",
+    "max_rnd": "30",
+#    "id": "8"
+  },
+  {
+    "sl_league_type": "1",
+    "name": "意甲",
+    "cur_rnd": "38",
+    "current_league": "2016",
+    "max_rnd": "38",
+    "id": "21"
+  },
+  {
+    "sl_league_type": "3",
+    "name": "德甲",
+    "cur_rnd": "34",
+    "current_league": "2016",
+    "max_rnd": "34",
+    "id": "22"
+  },
+  {
+    "sl_league_type": "2",
+    "name": "西甲",
+    "cur_rnd": "38",
+    "current_league": "2016",
+    "max_rnd": "38",
+    "id": "23"
+  },
+  {
+    "sl_league_type": "5",
+    "name": "法甲",
+    "cur_rnd": "38",
+    "current_league": "2016",
+    "max_rnd": "38",
+    "id": "24"
+  },
+  {
+    "sl_league_type": "4",
+    "name": "英超",
+    "cur_rnd": "38",
+    "current_league": "2016",
+    "max_rnd": "38",
+    "id": "8"
+  },
+]
 
 def get(url):
     try:
@@ -43,9 +95,10 @@ def get(url):
 
 def crawl_rnd_info():
     now = datetime.now()
-    data = get(
-        'http://platform.sina.com.cn/sports_all/client_api?_sport_t_=Intlfootball&_sport_a_=getLeaguesInfo&callback=&app_key=3571367214&_={:%s}'.format(now)).json()
-    result = data['result']['data'].values()
+#    data = get(
+#        'http://platform.sina.com.cn/sports_all/client_api?_sport_t_=Intlfootball&_sport_a_=getLeaguesInfo&callback=&app_key=3571367214&_={:%s}'.format(now)).json()
+#    result = data['result']['data'].values()
+    result = league_infos
 
     info_url = "http://platform.sina.com.cn/sports_all/client_api?_sport_t_=livecast&_sport_a_=matchesByType&app_key=3571367214&type={type}&rnd={rnd}&season={year}&_={t:%s}"
     for info in result:
@@ -73,16 +126,8 @@ def crawl_game_infos():
         for game_info in games_info['result']['data']:
             yield game_info
 
-def procese_game_info(game_info):
-    data = game_info
-    game_id = game_info['livecast_id']
-    game_log = get_game_tracking_log(game_id)
-    game_players = get_game_players(game_id)
-    game_event_classify = get_game_event_classify(game_id)
-    match_event = get_game_matchevent(game_id)
-    if not game_info.get('NewsUrl', None):
-        return None
-    battlefield_report = get(game_info['NewsUrl']).content
+def get_article(url):
+    battlefield_report = get(url).content
 
     if battlefield_report.find('HTTP-EQUIV="Refresh"') != -1:
         new_url = re.findall('URL=([^"]*)', battlefield_report)[0]
@@ -103,7 +148,21 @@ def procese_game_info(game_info):
         article_html = unicode(soup.select('.blkContainerSblk')[0])
         article_html = re.sub("\n+", "\n", article_html)
     else:
-        return None
+        raise Exception('article parse error on {}'.format(url))
+    
+    return article_html
+
+def procese_game_info(game_info):
+    data = game_info
+    game_id = game_info['livecast_id']
+    game_log = get_game_tracking_log(game_id)
+    game_players = get_game_players(game_id)
+    game_event_classify = get_game_event_classify(game_id)
+    match_event = get_game_matchevent(game_id)
+    if game_info.get('NewsUrl', None):
+        article_html = get_article(game_info['NewsUrl'])
+    else:
+        article_html = ""
 
     data['article_html'] = article_html
     data['players'] = game_players
