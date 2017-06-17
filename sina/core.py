@@ -132,6 +132,7 @@ def get_article(url):
 
     if battlefield_report.find('HTTP-EQUIV="Refresh"') != -1:
         new_url = re.findall('URL=([^"]*)', battlefield_report)[0]
+        logger.info("{} to {}".format(url, new_url))
         battlefield_report = get(new_url).content
 
     try:
