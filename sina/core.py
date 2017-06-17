@@ -89,7 +89,8 @@ def get(url):
     try:
         return requests.get(url, timeout=10)
     except Exception as e:
-        print e
+        logger.exception(e)
+        logger.info(url)
         return get(url)
 
 
