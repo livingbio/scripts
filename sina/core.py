@@ -86,11 +86,11 @@ league_infos = [
 ]
 
 def get(url):
+    logger.info("get {}".format(url))
     try:
         return requests.get(url, timeout=10)
     except Exception as e:
         logger.exception(e)
-        logger.info(url)
         return get(url)
 
 
