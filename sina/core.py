@@ -124,8 +124,10 @@ def crawl_game_infos():
         print rnd_info
         url = rnd_info['url']
         games_info = get(url).json()
+        print "start rnd download"
         for game_info in games_info['result']['data']:
             yield game_info
+        print "end rnd download"
 
 def get_article(url):
     battlefield_report = get(url).content
