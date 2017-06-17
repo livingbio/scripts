@@ -163,6 +163,8 @@ def procese_game_info(game_info):
     game_event_classify = get_game_event_classify(game_id)
     match_event = get_game_matchevent(game_id)
     if game_info.get('NewsUrl', None):
+        logger.info('redirect')
+        logger.info(game_info['NewsUrl'])
         article_html = get_article(game_info['NewsUrl'])
     else:
         article_html = ""
