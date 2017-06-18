@@ -88,6 +88,8 @@ league_infos = [
 def get(url):
     logger.info("get {}".format(url))
     try:
+        if url == "http://admin.match.sports.sina.com.cn/app/home/index.php":
+            return
         return requests.get(url, timeout=10)
     except Exception as e:
         logger.exception(e)
