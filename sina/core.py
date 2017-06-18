@@ -16,6 +16,7 @@ import os
 import logging
 from logging.config import fileConfig
 from gevent.queue import Queue
+import time
 
 output_queue = Queue()
 
@@ -91,6 +92,7 @@ def get(url):
         return requests.get(url, timeout=10)
     except Exception as e:
         logger.exception(e)
+        time.sleep(5)
         return get(url)
 
 
