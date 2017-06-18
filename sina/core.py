@@ -88,8 +88,6 @@ league_infos = [
 def get(url):
     logger.info("get {}".format(url))
     try:
-        if url == "http://admin.match.sports.sina.com.cn/app/home/index.php":
-            return
         return requests.get(url, timeout=10)
     except Exception as e:
         logger.exception(e)
@@ -169,7 +167,10 @@ def procese_game_info(game_info):
     if game_info.get('NewsUrl', None):
         logger.info('redirect')
         logger.info(game_info['NewsUrl'])
-        article_html = get_article(game_info['NewsUrl'])
+        if game_info['NewsUrl'] == 'http://admin.match.sports.sina.com.cn/app/home/index.php':
+            article_html = ""
+        else:
+            article_html = get_article(game_info['NewsUrl'])
     else:
         article_html = ""
 
